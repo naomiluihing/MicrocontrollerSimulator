@@ -4,11 +4,11 @@
 #include "params/HelloObject.hh"
 #include "sim/sim_object.hh"
 
-class HelloObject : public SimObject{
-
-	public:
-		HelloObject(HelloObjectParams *p);
+class HelloObject : public SimObject
+{
+  public:
+    HelloObject(HelloObjectParams *p);
 };
 
-#endif //__LEARNING_GEM5_HELLO_OBJECT_HH__
+#endif // __LEARNING_GEM5_HELLO_OBJECT_HH__
 

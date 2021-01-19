@@ -2,15 +2,14 @@
 
 #include <iostream>
 
-HelloObject::HelloObject(HelloObjectParams *params):
-        SimObject(params)
+HelloObject::HelloObject(HelloObjectParams *params) :
+    SimObject(params)
 {
-        std::cout << "Hello World! From a SimObject!" << std::endl;
+    std::cout << "Hello World! From a SimObject!" << std::endl;
 }
 
 HelloObject*
 HelloObjectParams::create()
 {
-        return new HelloObject(this);
+    return new HelloObject(this);
 }
-
