@@ -2,10 +2,23 @@
 
 #include <iostream>
 
+#include "debug/Hello.hh"
+
 HelloObject::HelloObject(HelloObjectParams *params):
-    SimObject(params)
+    SimObject(params), event([this]{processEvent();}, name())
 {
-    std::cout << "Hello World From SimObject!!"<< std::endl;
+    DPRINTF(Hello, "Created the hello object!\n");
+}
+
+void
+HelloObject::processEvent()
+{
+    DPRINTF(Hello, "Hellow world! Processing the Event!\n");
+}
+
+void HelloObject::startup()
+{
+    schedule(event, 100);
 }
 
 HelloObject*
