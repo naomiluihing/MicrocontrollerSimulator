@@ -3,9 +3,13 @@
 #include "debug/Hello.hh"
 
 HelloObject::HelloObject(HelloObjectParams *params):
-    SimObject(params), event([this]{processEvent();}, name()), latency(100), timesLeft(10)
+    SimObject(params), 
+    event(*this), 
+    myName(params->name), 
+    latency(params->time_to_wait), 
+    timesLeft(params->number_of_fires)
 {
-    DPRINTF(Hello, "Created the hello object!\n");
+    DPRINTF(Hello, "Created the hello object with the name %s!\n", myName);
 }
 
 HelloObject*

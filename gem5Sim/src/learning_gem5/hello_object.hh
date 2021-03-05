@@ -9,7 +9,9 @@ class HelloObject : public SimObject
     private:
       void processEvent();
       
-      EventFunctionWrapper event;
+      EventWrapper<HelloObject, &HelloObject::processEvent> event;
+      
+      std::string myName;
       
       Tick latency;
       
