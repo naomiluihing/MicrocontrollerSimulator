@@ -1,0 +1,6 @@
+Import('*')
+
+SimObject('sevenSegDis.py')
+Source('sevenSegDis.cc')
+
+DebugFlag('Seven')
