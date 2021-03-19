@@ -5,4 +5,4 @@ class SevenSegDis(SimObject):
     type = 'SevenSegDis'
     cxx_header = "microSimProject/sevenSegDis.hh"
     
-    toDisplay = Param.Int("What is to be displayed")
+    toDisplay = Param.String("What is to be displayed")

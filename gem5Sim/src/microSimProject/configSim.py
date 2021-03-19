@@ -4,8 +4,9 @@ from m5.objects import *
 root = Root(full_system = False)
 
 root.svsgd = SevenSegDis()
-root.svsgd.toDisplay = 1101101
-
+root.svsgd.toDisplay = "A"
+root.svsgd2 = SevenSegDis()
+root.svsgd2.toDisplay = "3"
 
 m5.instantiate()
 

@@ -11,7 +11,7 @@ class SevenSegDis : public SimObject
       
       EventWrapper<SevenSegDis, &SevenSegDis::processEvent> event;
       
-      int displayChar;
+      std::string displayChar;
       
       
     public:

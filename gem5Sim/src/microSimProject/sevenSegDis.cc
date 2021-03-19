@@ -7,43 +7,6 @@ SevenSegDis::SevenSegDis(SevenSegDisParams *params) :
     event(*this),
     displayChar(params->toDisplay)
 {
-    /*
-    switch (displayChar){
-        case 1111110:
-            DPRINTF(Seven,"Displaying 0\n");
-            break;
-        case 0110000:
-            DPRINTF(Seven,"Displaying 1\n");
-            break;
-        case 1101101:
-            DPRINTF(Seven,"Displaying 2\n");
-            break;
-        case 1111001:
-            DPRINTF(Seven,"Displaying 3\n");
-            break;
-        case 0110011:
-            DPRINTF(Seven,"Displaying 4\n");
-            break;
-        case 1110111:
-            DPRINTF(Seven,"Displaying A\n");
-            break;
-        case 0011111:
-            DPRINTF(Seven,"Displaying b\n");
-            break;
-        case 1001110:
-            DPRINTF(Seven,"Displaying C\n");
-            break;
-        case 0111101:
-            DPRINTF(Seven,"Displaying d\n");
-            break;
-        case 1001111:
-            DPRINTF(Seven,"Displaying E\n");
-            break;
-        default:
-            DPRINTF(Seven, "Nothing to Display.\n");
-            break;
-    }
-    */
 
 }
 
@@ -61,41 +24,29 @@ void SevenSegDis::startup()
 void
 SevenSegDis::processEvent()
 {
-	switch (displayChar){
-		case 1111110:
-			DPRINTF(Seven,"Displaying 0\n");
-			break;
-		case 0110000:
-			DPRINTF(Seven,"Displaying 1\n");
-			break;
-		case 1101101:
-			DPRINTF(Seven,"Displaying 2\n");
-			break;
-		case 1111001:
-			DPRINTF(Seven,"Displaying 3\n");
-			break;
-		case 0110011:
-			DPRINTF(Seven,"Displaying 4\n");
-			break;
-		case 1110111:
-			DPRINTF(Seven,"Displaying A\n");
-			break;
-		case 0011111:
-			DPRINTF(Seven,"Displaying b\n");
-			break;
-		case 1001110:
-			DPRINTF(Seven,"Displaying C\n");
-			break;
-		case 0111101:
-			DPRINTF(Seven,"Displaying d\n");
-			break;
-		case 1001111:
-			DPRINTF(Seven,"Displaying E\n");
-			break;
-		default:
-			DPRINTF(Seven, "Nothing to Display.\n");
-			break;
-	}
+    printf("What do you want to display?\n");
+    DPRINTF(Seven, "the input is: %s!\n", displayChar);
+    
+    if (displayChar.compare("0")==0)
+         DPRINTF(Seven,"Displaying 1111110\n");
+    if (displayChar.compare("1")==0)
+         DPRINTF(Seven,"Displaying 0110000\n");
+    if (displayChar.compare("2")==0)
+         DPRINTF(Seven,"Displaying 1101101\n");
+    if (displayChar.compare("3")==0)
+         DPRINTF(Seven,"Displaying 1111001\n");
+    if (displayChar.compare("4")==0)
+         DPRINTF(Seven,"Displaying 0110011\n");
+    if (displayChar.compare("A")==0)
+         DPRINTF(Seven,"Displaying 1110111\n");
+    if (displayChar.compare("b")==0)
+         DPRINTF(Seven,"Displaying 0011111\n");
+    if (displayChar.compare("C")==0)
+         DPRINTF(Seven,"Displaying 1001110\n");
+    if (displayChar.compare("d")==0)
+         DPRINTF(Seven,"Displaying 0111101\n");
+    if (displayChar.compare("E")==0)
+         DPRINTF(Seven,"Displaying 1001111\n");
     
    DPRINTF(Seven, "Done displaying!\n");
     
