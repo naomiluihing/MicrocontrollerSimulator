@@ -1,26 +1,22 @@
 #include "microSimProject/sevenSegDis.hh"
-
 #include "debug/Seven.hh"
-
+#include <stdlib.h>
 SevenSegDis::SevenSegDis(SevenSegDisParams *params) : 
     SimObject(params),
     event(*this),
     displayChar(params->toDisplay)
 {
-
+    DPRINTF(Seven, "display object created\n");
 }
-
 SevenSegDis*
 SevenSegDisParams::create()
 {
     return new SevenSegDis(this);
 }
-
 void SevenSegDis::startup()
 {
-    schedule(event, curTick());
+    schedule(event, rand()%600);
 }
-
 void
 SevenSegDis::processEvent()
 {
@@ -29,7 +25,7 @@ SevenSegDis::processEvent()
     
     if (displayChar.compare("0")==0)
          DPRINTF(Seven,"Displaying 1111110\n");
-    if (displayChar.compare("1")==0)
+    if (displayChar.compare("1")==0)sa
          DPRINTF(Seven,"Displaying 0110000\n");
     if (displayChar.compare("2")==0)
          DPRINTF(Seven,"Displaying 1101101\n");
@@ -48,6 +44,5 @@ SevenSegDis::processEvent()
     if (displayChar.compare("E")==0)
          DPRINTF(Seven,"Displaying 1001111\n");
     
-   DPRINTF(Seven, "Done displaying!\n");
-    
+   DPRINTF(Seven, "Done displaying!\n"); 
 }
