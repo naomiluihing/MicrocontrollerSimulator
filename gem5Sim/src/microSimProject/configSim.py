@@ -14,6 +14,20 @@ system.cpu = TimingSimpleCPU() #Created the CPU which executes each instruction 
 
 system.membus = SystemXBar() #Created the system wide memory bus
 
+#since we created the memory bus, we would then connect the cache ports directly to the memory bus
+system.cpu.icache_port = system.membus.slave
+system.cpu.dcache_port = system.membus.slave
+
+#Created an I/O controller on the CPU and connected it to the memory bus
+system.cpu.createInterruptController()
+system.system_port = system.membus.slave
+
+#Created the memory controller to connect to the memory bus which is responsible for the entire memory range
+system.mem_ctrl = DDR3_1600_8x8()
+system.mem_ctrl.range = system.mem_ranges[0]
+system.mem_ctrl.port = system.membus.master
+
+#Created the root object for the instantiation of the system and beginning of execution
 root = Root(full_system = False)
 
 
