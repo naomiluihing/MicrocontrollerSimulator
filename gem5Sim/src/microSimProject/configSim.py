@@ -1,6 +1,8 @@
 import m5
 from m5.objects import *
 
+system = System()
+
 root = Root(full_system = False)
 
 root.svsgd = SevenSegDis()
