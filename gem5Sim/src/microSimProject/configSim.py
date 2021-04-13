@@ -3,6 +3,10 @@ from m5.objects import *
 
 system = System()
 
+system.clk_domain = SrcClockDomain()
+system.clk_domain.clock = '1GHz'
+system.clk_domain.voltage_domain = VoltageDomain()
+
 root = Root(full_system = False)
 
 root.svsgd = SevenSegDis()
