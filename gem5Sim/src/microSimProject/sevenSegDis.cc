@@ -25,7 +25,7 @@ SevenSegDis::processEvent()
     
     if (displayChar.compare("0")==0)
          DPRINTF(Seven,"Displaying 1111110\n");
-    if (displayChar.compare("1")==0)sa
+    if (displayChar.compare("1")==0)
          DPRINTF(Seven,"Displaying 0110000\n");
     if (displayChar.compare("2")==0)
          DPRINTF(Seven,"Displaying 1101101\n");
