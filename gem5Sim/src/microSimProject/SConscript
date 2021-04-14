@@ -3,4 +3,9 @@ Import('*')
 SimObject('sevenSegDis.py')
 Source('sevenSegDis.cc')
 
+SimObject('sensor.py')
+Source('sensor.cc')
+
 DebugFlag('Seven')
+DebugFlag('Sensor')
+

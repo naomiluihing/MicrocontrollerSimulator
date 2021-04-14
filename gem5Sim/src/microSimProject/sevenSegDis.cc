@@ -5,13 +5,13 @@ SevenSegDis::SevenSegDis(SevenSegDisParams *params) :
     SimObject(params),
     event(*this),
     displayChar(params->toDisplay)
-{
-    DPRINTF(Seven, "display object created\n");
+{ 
+    DPRINTF(Seven, "display object created\n");    
 }
 SevenSegDis*
 SevenSegDisParams::create()
 {
-    return new SevenSegDis(this);
+   return new SevenSegDis(this);
 }
 void SevenSegDis::startup()
 {
@@ -20,12 +20,12 @@ void SevenSegDis::startup()
 void
 SevenSegDis::processEvent()
 {
-    printf("What do you want to display?\n");
+    DPRINTF(Seven, "What do you want to display?\n");
     DPRINTF(Seven, "the input is: %s!\n", displayChar);
     
     if (displayChar.compare("0")==0)
          DPRINTF(Seven,"Displaying 1111110\n");
-    if (displayChar.compare("1")==0)sa
+    if (displayChar.compare("1")==0)
          DPRINTF(Seven,"Displaying 0110000\n");
     if (displayChar.compare("2")==0)
          DPRINTF(Seven,"Displaying 1101101\n");
