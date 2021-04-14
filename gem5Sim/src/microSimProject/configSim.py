@@ -36,9 +36,13 @@ root.svsgd.toDisplay = "A"
 root.svsgd2 = SevenSegDis()
 root.svsgd2.toDisplay = "3"
 
-m5.instantiate()
+root.tester = Sensor()
+root.tester.curTemp = (23)
+root.tester.newTemp = (35)
 
+m5.instantiate()
 
 print("Beginning simmulation!")
 exit_event = m5.simulate()
 print('Exiting @ tick {} because {}'.format(m5.curTick(), exit_event.getCause()))
+
