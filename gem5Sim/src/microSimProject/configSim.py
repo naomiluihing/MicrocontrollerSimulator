@@ -82,13 +82,15 @@ root.svsgd4.toDisplay = "3"
 root.svsgd5 = SevenSegDis()
 root.svsgd5.toDisplay = "4"
 root.svsgd6 = SevenSegDis()
-root.svsgd6.toDisplay = "b"
+root.svsgd6.toDisplay = "A"
 root.svsgd7 = SevenSegDis()
-root.svsgd7.toDisplay = "C"
+root.svsgd7.toDisplay = "b"
 root.svsgd8 = SevenSegDis()
-root.svsgd8.toDisplay = "d"
+root.svsgd8.toDisplay = "C"
 root.svsgd9 = SevenSegDis()
-root.svsgd9.toDisplay = "E"
+root.svsgd9.toDisplay = "d"
+root.svsgd10 = SevenSegDis()
+root.svsgd10.toDisplay = "E"
 
 #Valerie's Test 
 root.tester = Sensor()
