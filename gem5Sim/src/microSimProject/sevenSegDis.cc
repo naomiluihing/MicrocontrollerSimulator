@@ -1,17 +1,193 @@
 #include "microSimProject/sevenSegDis.hh"
 #include "debug/Seven.hh"
 #include <stdlib.h>
+
+//Basic MemObject functions
 SevenSegDis::SevenSegDis(SevenSegDisParams *params) : 
-    SimObject(params),
+    MemObject(params),
     event(*this),
     displayChar(params->toDisplay)
+    instPort(params->name + ".inst_port", this),
+    dataPort(params->name + ".data_port", this),
+    memPort(params->name + ".mem_side", this),
+    blocked(false)
 {
     DPRINTF(Seven, "display object created\n");
 }
+
+BaseMasterPort& 
+SevenSegDis::getMasterPort(const std::string& if_name, PortID idx)
+{
+	if (if_name=="mem_side"){
+		return memPort;
+	} else {
+		return MemObject::getMasterPort(if_name, idx);
+	}
+}
+
+BaseSlavePort& 
+SevenSegDis::getSlavePort(const std::string& if_name, PortID idx)
+{
+	if (if_name=="inst_port"){
+		return instPort;
+	} elseif (if_name=="data_port"){
+		return dataPort;
+	} else{
+		return MemObject::getSlavePort(if_name, idx);
+	}
+}
+
+//Master and Slave port functions
+AddrRangeList
+SevenSegDis::CPUSidePort::getAddrRanges() const
+{
+	return owner->getAddrRanges();
+}
+
+void
+SevenSegDis::CPUSidePort::recvFunctional(PacketPtr pkt)
+{
+	return owner->handleFunctionl(pkt);
+}
+
+void
+SevenSegDis::handleFunctional(PacketPtr pkt)
+{
+    memPort.sendFunctional(pkt);
+}
+
+AddrRangeList
+SevenSegDis::getAddrRanges() const
+{
+    DPRINTF(Seven, "Sending new ranges\n");
+    return memPort.getAddrRanges();
+}
+
+void
+SevenSegDis::MemSidePort::recvRangeChange()
+{
+    owner->sendRangeChange();
+}
+
+void
+SevenSegDis::MemSidePort::recvRangeChange()
+{
+    owner->sendRangeChange();
+}
+
+//Receiving requests
+bool
+SevenSegDis::CPUSidePort::recvTimingReq(PacketPtr pkt)
+{
+    if (!owner->handleRequest(pkt)) {
+        needRetry = true;
+        return false;
+    } else {
+        return true;
+    }
+}
+
+bool
+SevenSegDis::handleRequest(PacketPtr pkt)
+{
+    if (blocked) {
+        return false;
+    }
+    DPRINTF(Seven, "Got request for addr %#x\n", pkt->getAddr());
+    blocked = true;
+    memPort.sendPacket(pkt);
+    return true;
+}
+
+void
+SevenSegDis::MemSidePort::sendPacket(PacketPtr pkt)
+{
+    panic_if(blockedPacket != nullptr, "Should never try to send if blocked!");
+    if (!sendTimingReq(pkt)) {
+        blockedPacket = pkt;
+    }
+}
+
+void
+SevenSegDis::MemSidePort::recvReqRetry()
+{
+    assert(blockedPacket != nullptr);
+
+    PacketPtr pkt = blockedPacket;
+    blockedPacket = nullptr;
+
+    sendPacket(pkt);
+}
+
+//Receiving responses
+bool
+SevenSegDis::MemSidePort::recvTimingResp(PacketPtr pkt)
+{
+    return owner->handleResponse(pkt);
+}
+
+bool
+SevenSegDis::handleResponse(PacketPtr pkt)
+{
+    assert(blocked);
+    DPRINTF(Seven, "Got response for addr %#x\n", pkt->getAddr());
+
+    blocked = false;
+
+    // Simply forward to the memory port
+    if (pkt->req->isInstFetch()) {
+        instPort.sendPacket(pkt);
+    } else {
+        dataPort.sendPacket(pkt);
+    }
+
+    instPort.trySendRetry();
+    dataPort.trySendRetry();
+
+    return true;
+}
+
+void
+SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
+{
+    panic_if(blockedPacket != nullptr, "Should never try to send if blocked!");
+
+    if (!sendTimingResp(pkt)) {
+        blockedPacket = pkt;
+    }
+}
+
+void
+SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
+{
+    panic_if(blockedPacket != nullptr, "Should never try to send if blocked!");
+
+    if (!sendTimingResp(pkt)) {
+        blockedPacket = pkt;
+    }
+}
+
+void
+SevenSegDis::CPUSidePort::trySendRetry()
+{
+    if (needRetry && blockedPacket == nullptr) {
+        needRetry = false;
+        DPRINTF(Seven, "Sending retry req for %d\n", id);
+        sendRetryReq();
+    }
+}
+
+void
+SevenSegDis::sendRangeChange()
+{
+    instPort.sendRangeChange();
+    dataPort.sendRangeChange();
+}
+
 SevenSegDis*
 SevenSegDisParams::create()
 {
-    return new SevenSegDis(this);
+   return new SevenSegDis(this);
 }
 void SevenSegDis::startup()
 {
@@ -46,3 +222,4 @@ SevenSegDis::processEvent()
     
    DPRINTF(Seven, "Done displaying!\n"); 
 }
+
