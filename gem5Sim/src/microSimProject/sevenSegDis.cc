@@ -6,36 +6,14 @@
 SevenSegDis::SevenSegDis(SevenSegDisParams *params) : 
     MemObject(params),
     event(*this),
-    displayChar(params->toDisplay)
+    //displayChar(params->toDisplay)
     instPort(params->name + ".inst_port", this),
     dataPort(params->name + ".data_port", this),
-    memPort(params->name + ".mem_side", this),
-    blocked(false)
+    memPort(params->name + ".mem_side", this)
 {
     DPRINTF(Seven, "display object created\n");
 }
 
-BaseMasterPort& 
-SevenSegDis::getMasterPort(const std::string& if_name, PortID idx)
-{
-	if (if_name=="mem_side"){
-		return memPort;
-	} else {
-		return MemObject::getMasterPort(if_name, idx);
-	}
-}
-
-BaseSlavePort& 
-SevenSegDis::getSlavePort(const std::string& if_name, PortID idx)
-{
-	if (if_name=="inst_port"){
-		return instPort;
-	} elseif (if_name=="data_port"){
-		return dataPort;
-	} else{
-		return MemObject::getSlavePort(if_name, idx);
-	}
-}
 
 //Master and Slave port functions
 AddrRangeList
@@ -47,7 +25,7 @@ SevenSegDis::CPUSidePort::getAddrRanges() const
 void
 SevenSegDis::CPUSidePort::recvFunctional(PacketPtr pkt)
 {
-	return owner->handleFunctionl(pkt);
+	return owner->handleFunctional(pkt);
 }
 
 void
@@ -63,6 +41,7 @@ SevenSegDis::getAddrRanges() const
     return memPort.getAddrRanges();
 }
 
+/*
 void
 SevenSegDis::MemSidePort::recvRangeChange()
 {
@@ -74,6 +53,7 @@ SevenSegDis::MemSidePort::recvRangeChange()
 {
     owner->sendRangeChange();
 }
+*/
 
 //Receiving requests
 bool
@@ -158,16 +138,6 @@ SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
 }
 
 void
-SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
-{
-    panic_if(blockedPacket != nullptr, "Should never try to send if blocked!");
-
-    if (!sendTimingResp(pkt)) {
-        blockedPacket = pkt;
-    }
-}
-
-void
 SevenSegDis::CPUSidePort::trySendRetry()
 {
     if (needRetry && blockedPacket == nullptr) {
@@ -177,13 +147,14 @@ SevenSegDis::CPUSidePort::trySendRetry()
     }
 }
 
+/*
 void
 SevenSegDis::sendRangeChange()
 {
     instPort.sendRangeChange();
     dataPort.sendRangeChange();
 }
-
+*/
 SevenSegDis*
 SevenSegDisParams::create()
 {

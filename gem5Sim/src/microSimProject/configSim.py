@@ -12,29 +12,47 @@ system.mem_ranges = [AddrRange('512MB')] #Set the single memory range to size 51
 
 system.cpu = TimingSimpleCPU() #Created the CPU which executes each instruction in a single clock cycle except for the memory request
 
+#Creases memobject SevenSegDis
+system.memobj = SevenSegDis()
+
 system.membus = SystemXBar() #Created the system wide memory bus
 
 #since we created the memory bus, we would then connect the cache ports directly to the memory bus
-system.cpu.icache_port = system.membus.slave
-system.cpu.dcache_port = system.membus.slave
+system.cpu.icache_port = system.memobj.inst_port
+system.cpu.dcache_port = system.memobj.data_port
+#system.cpu.icache_port = system.membus.slave
+#system.cpu.dcache_port = system.membus.slave
+
+
+system.memobj.mem_side = system.membus.slave
 
 #Created an I/O controller on the CPU and connected it to the memory bus
 system.cpu.createInterruptController()
+system.cpu.interrupts[0].pio = system.membus.master
+system.cpu.interrupts[0].int_master = system.membus.slave
+system.cpu.interrupts[0].int_slave = system.membus.master
+
 system.system_port = system.membus.slave
+
 
 #Created the memory controller to connect to the memory bus which is responsible for the entire memory range
 system.mem_ctrl = DDR3_1600_8x8()
 system.mem_ctrl.range = system.mem_ranges[0]
 system.mem_ctrl.port = system.membus.master
 
+process = Process()
+#process.cmd = ['tests/test-progs/hello/bin/x86/linux/hello']
+system.cpu.workload = process
+system.cpu.createThreads()
+
 #Created the root object for the instantiation of the system and beginning of execution
-root = Root(full_system = False)
+root = Root(full_system = False, system = system)
 
 
 root.svsgd = SevenSegDis()
-root.svsgd.toDisplay = "A"
+#root.svsgd.toDisplay = "A"
 root.svsgd2 = SevenSegDis()
-root.svsgd2.toDisplay = "3"
+#root.svsgd2.toDisplay = "3"
 
 m5.instantiate()
 
