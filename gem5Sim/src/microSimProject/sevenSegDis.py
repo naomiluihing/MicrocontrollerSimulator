@@ -10,4 +10,4 @@ class SevenSegDis(SimObject):
 	data_port = SlavePort("CPU side port, receives requests")
 	mem_side = MasterPort("Memory side port, sends requests")
 
-	#toDisplay = Param.String("What is to be displayed")
+	toDisplay = Param.String("null","What is to be displayed")

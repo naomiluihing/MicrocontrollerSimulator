@@ -8,7 +8,7 @@ system.clk_domain.clock = '1GHz' #Set the clock to 1GHz
 system.clk_domain.voltage_domain = VoltageDomain() # Set the voltage domain for the clock to default option
 
 system.mem_mode = 'timing' #Used timing mode for the memory simulation
-system.mem_ranges = [AddrRange('512MB')] #Set the single memory range to size 512MB
+system.mem_ranges = [AddrRange('8192MB')] #Set the single memory range to size 512MB
 
 system.cpu = TimingSimpleCPU() #Created the CPU which executes each instruction in a single clock cycle except for the memory request
 
@@ -25,9 +25,9 @@ system.memobj.mem_side = system.membus.slave
 
 #Created an I/O controller on the CPU and connected it to the memory bus
 system.cpu.createInterruptController()
-system.cpu.interrupts[0].pio = system.membus.master
-system.cpu.interrupts[0].int_master = system.membus.slave
-system.cpu.interrupts[0].int_slave = system.membus.master
+#system.cpu.interrupts[0].pio = system.membus.master
+#system.cpu.interrupts[0].int_master = system.membus.slave
+#system.cpu.interrupts[0].int_slave = system.membus.master
 
 system.system_port = system.membus.slave
 
@@ -37,7 +37,7 @@ system.mem_ctrl.range = system.mem_ranges[0]
 system.mem_ctrl.port = system.membus.master
 
 process = Process()
-process.cmd = ['tests/test-progs/hello/bin/x86/linux/hello']
+process.cmd = ['tests/test-progs/hello/bin/arm/linux/hello']
 system.cpu.workload = process
 system.cpu.createThreads()
 
@@ -46,7 +46,7 @@ root = Root(full_system = False, system = system)
 
 
 root.svsgd = SevenSegDis()
-#root.svsgd.toDisplay = "A"
+root.svsgd.toDisplay = "A"
 root.svsgd2 = SevenSegDis()
 #root.svsgd2.toDisplay = "3"
 

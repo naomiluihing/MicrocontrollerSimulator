@@ -2,7 +2,7 @@
 #define __MICROSIMPROJECT_SEVENSEGDIS_HH__
 
 #include "mem/port.hh"
-#include "params/sevenSegDis.hh"
+#include "params/SevenSegDis.hh"
 #include "sim/sim_object.hh"
 
 class SevenSegDis : public SimObject
@@ -12,7 +12,7 @@ class SevenSegDis : public SimObject
       
       	EventWrapper<SevenSegDis, &SevenSegDis::processEvent> event;
       	
-      	//std::string displayChar;
+      	std::string displayChar;
       
 	class CPUSidePort : public SlavePort
 	{
