@@ -2,20 +2,40 @@
 #include "debug/Seven.hh"
 #include <stdlib.h>
 
-//Basic MemObject functions
+/*Basic MemObject functions*/
 SevenSegDis::SevenSegDis(SevenSegDisParams *params) : 
-    MemObject(params),
+    SimObject(params),
     event(*this),
     //displayChar(params->toDisplay)
     instPort(params->name + ".inst_port", this),
     dataPort(params->name + ".data_port", this),
-    memPort(params->name + ".mem_side", this)
+    memPort(params->name + ".mem_side", this),
+    blocked(false)
 {
     DPRINTF(Seven, "display object created\n");
 }
 
+Port &
+SevenSegDis::getPort(const std::string &if_name, PortID idx)
+{
+    panic_if(idx != InvalidPortID, "This object doesn't support vector ports");
 
-//Master and Slave port functions
+    // This is the name from the Python SimObject declaration (SimpleMemobj.py)
+    if (if_name == "mem_side") {
+        return memPort;
+    } else if (if_name == "inst_port") {
+        return instPort;
+    } else if (if_name == "data_port") {
+        return dataPort;
+    } else {
+        // pass it along to our super class
+        return SimObject::getPort(if_name, idx);
+    }
+}
+
+
+/*Master and Slave port functions*/
+//Call into the SevenSegDis
 AddrRangeList
 SevenSegDis::CPUSidePort::getAddrRanges() const
 {
@@ -28,6 +48,7 @@ SevenSegDis::CPUSidePort::recvFunctional(PacketPtr pkt)
 	return owner->handleFunctional(pkt);
 }
 
+//Pass through requst to the memory side
 void
 SevenSegDis::handleFunctional(PacketPtr pkt)
 {
@@ -37,11 +58,11 @@ SevenSegDis::handleFunctional(PacketPtr pkt)
 AddrRangeList
 SevenSegDis::getAddrRanges() const
 {
-    DPRINTF(Seven, "Sending new ranges\n");
+    DPRINTF(Seven, "Sending new ranges\n");//Used to track what is happening for debugging purposes
     return memPort.getAddrRanges();
 }
 
-/*
+//Forward requests through slave port
 void
 SevenSegDis::MemSidePort::recvRangeChange()
 {
@@ -49,13 +70,14 @@ SevenSegDis::MemSidePort::recvRangeChange()
 }
 
 void
-SevenSegDis::MemSidePort::recvRangeChange()
+SevenSegDis::sendRangeChange()
 {
-    owner->sendRangeChange();
+    instPort.sendRangeChange();
+    dataPort.sendRangeChange();
 }
-*/
 
-//Receiving requests
+/*Receiving requests*/
+//Stores metadata of the control flow of requests. Will send a retry if request is blocked
 bool
 SevenSegDis::CPUSidePort::recvTimingReq(PacketPtr pkt)
 {
@@ -67,6 +89,7 @@ SevenSegDis::CPUSidePort::recvTimingReq(PacketPtr pkt)
     }
 }
 
+//Helper function for SevnSegDis implementation
 bool
 SevenSegDis::handleRequest(PacketPtr pkt)
 {
@@ -79,6 +102,7 @@ SevenSegDis::handleRequest(PacketPtr pkt)
     return true;
 }
 
+//Handles the flow control in case the peer slave port cannot accept the request.
 void
 SevenSegDis::MemSidePort::sendPacket(PacketPtr pkt)
 {
@@ -88,6 +112,7 @@ SevenSegDis::MemSidePort::sendPacket(PacketPtr pkt)
     }
 }
 
+//Resends packet when it is allowed to
 void
 SevenSegDis::MemSidePort::recvReqRetry()
 {
@@ -99,13 +124,14 @@ SevenSegDis::MemSidePort::recvReqRetry()
     sendPacket(pkt);
 }
 
-//Receiving responses
+/*Receiving responses*/
 bool
 SevenSegDis::MemSidePort::recvTimingResp(PacketPtr pkt)
 {
     return owner->handleResponse(pkt);
 }
 
+//Checks to see if packet is an instruction or a data packet & sends it to the appropriate port
 bool
 SevenSegDis::handleResponse(PacketPtr pkt)
 {
@@ -127,6 +153,7 @@ SevenSegDis::handleResponse(PacketPtr pkt)
     return true;
 }
 
+//Send packet but from the CPU end
 void
 SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
 {
@@ -138,6 +165,18 @@ SevenSegDis::CPUSidePort::sendPacket(PacketPtr pkt)
 }
 
 void
+SevenSegDis::CPUSidePort::recvRespRetry()
+{
+    assert(blockedPacket != nullptr);
+
+    PacketPtr pkt = blockedPacket;
+    blockedPacket = nullptr;
+
+    sendPacket(pkt);
+}
+
+//Cecks if a rety is needed
+void
 SevenSegDis::CPUSidePort::trySendRetry()
 {
     if (needRetry && blockedPacket == nullptr) {
@@ -147,23 +186,18 @@ SevenSegDis::CPUSidePort::trySendRetry()
     }
 }
 
-/*
-void
-SevenSegDis::sendRangeChange()
-{
-    instPort.sendRangeChange();
-    dataPort.sendRangeChange();
-}
-*/
+
 SevenSegDis*
 SevenSegDisParams::create()
 {
    return new SevenSegDis(this);
 }
+
 void SevenSegDis::startup()
 {
     schedule(event, rand()%600);
 }
+/*
 void
 SevenSegDis::processEvent()
 {
@@ -193,4 +227,5 @@ SevenSegDis::processEvent()
     
    DPRINTF(Seven, "Done displaying!\n"); 
 }
+*/
 

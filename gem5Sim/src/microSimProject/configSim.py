@@ -20,9 +20,6 @@ system.membus = SystemXBar() #Created the system wide memory bus
 #since we created the memory bus, we would then connect the cache ports directly to the memory bus
 system.cpu.icache_port = system.memobj.inst_port
 system.cpu.dcache_port = system.memobj.data_port
-#system.cpu.icache_port = system.membus.slave
-#system.cpu.dcache_port = system.membus.slave
-
 
 system.memobj.mem_side = system.membus.slave
 
@@ -34,14 +31,13 @@ system.cpu.interrupts[0].int_slave = system.membus.master
 
 system.system_port = system.membus.slave
 
-
 #Created the memory controller to connect to the memory bus which is responsible for the entire memory range
 system.mem_ctrl = DDR3_1600_8x8()
 system.mem_ctrl.range = system.mem_ranges[0]
 system.mem_ctrl.port = system.membus.master
 
 process = Process()
-#process.cmd = ['tests/test-progs/hello/bin/x86/linux/hello']
+process.cmd = ['tests/test-progs/hello/bin/x86/linux/hello']
 system.cpu.workload = process
 system.cpu.createThreads()
 
@@ -57,6 +53,6 @@ root.svsgd2 = SevenSegDis()
 m5.instantiate()
 
 
-print("Beginning simmulation!")
+print("Beginning simulation!")
 exit_event = m5.simulate()
 print('Exiting @ tick {} because {}'.format(m5.curTick(), exit_event.getCause()))
