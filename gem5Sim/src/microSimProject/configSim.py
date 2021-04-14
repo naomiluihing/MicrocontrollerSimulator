@@ -1,5 +1,6 @@
 import m5
 from m5.objects import *
+import random
 
 system = System() #Created the system Object which is the parent of all other objects in our simulated system.
 
@@ -44,11 +45,83 @@ system.cpu.createThreads()
 #Created the root object for the instantiation of the system and beginning of execution
 root = Root(full_system = False, system = system)
 
-
-root.svsgd = SevenSegDis()
-root.svsgd.toDisplay = "A"
-root.svsgd2 = SevenSegDis()
+#Funbi's test
+#root.svsgd = SevenSegDis()
+#root.svsgd.toDisplay = "A"
+#root.svsgd2 = SevenSegDis()
 #root.svsgd2.toDisplay = "3"
+#root.svsgd3 = SevenSegDis()
+#root.svsgd3.toDisplay = "b"
+#root.svsgd4 = SevenSegDis()
+#root.svsgd4.toDisplay = "0"
+#root.svsgd5 = SevenSegDis()
+#root.svsgd5.toDisplay = "C"
+#root.svsgd6 = SevenSegDis()
+#root.svsgd6.toDisplay = "4"
+#root.svsgd7 = SevenSegDis()
+#root.svsgd7.toDisplay = "d"
+#root.svsgd8 = SevenSegDis()
+#root.svsgd8.toDisplay = "2"
+#root.svsgd9 = SevenSegDis()
+#root.svsgd9.toDisplay = "E"
+#root.svsgd10 = SevenSegDis()
+#root.svsgd10.toDisplay = "1"
+
+#Funbi's test
+#root.tester = Sensor()
+#root.tester.curTemp = (random.randint(0, 150))
+#root.tester.newTemp = (random.randint(0, 150))
+#root.tester2 = Sensor()
+#root.tester2.curTemp = (random.randint(0, 150))
+#root.tester2.newTemp = (random.randint(0, 150))
+#root.tester3 = Sensor()
+#root.tester3.curTemp = (random.randint(0, 150))
+#root.tester3.newTemp = (random.randint(0, 150))
+#root.tester4 = Sensor()
+#root.tester4.curTemp = (random.randint(0, 150))
+#root.tester4.newTemp = (random.randint(0, 150))
+#root.tester5 = Sensor()
+#root.tester5.curTemp = (random.randint(0, 150))
+#root.tester5.newTemp = (random.randint(0, 150))
+
+#Valerie's Test 
+root.svsgd = SevenSegDis()
+root.svsgd.toDisplay = "0"
+root.svsgd2 = SevenSegDis()
+root.svsgd2.toDisplay = "1"
+root.svsgd3 = SevenSegDis()
+root.svsgd3.toDisplay = "2"
+root.svsgd4 = SevenSegDis()
+root.svsgd4.toDisplay = "3"
+root.svsgd5 = SevenSegDis()
+root.svsgd5.toDisplay = "4"
+root.svsgd6 = SevenSegDis()
+root.svsgd6.toDisplay = "A"
+root.svsgd7 = SevenSegDis()
+root.svsgd7.toDisplay = "b"
+root.svsgd8 = SevenSegDis()
+root.svsgd8.toDisplay = "C"
+root.svsgd9 = SevenSegDis()
+root.svsgd9.toDisplay = "d"
+root.svsgd10 = SevenSegDis()
+root.svsgd10.toDisplay = "E"
+
+#Valerie's Test 
+root.tester = Sensor()
+root.tester.curTemp = (random.randint(0, 100))
+root.tester.newTemp = (random.randint(0, 100))
+root.tester2 = Sensor()
+root.tester2.curTemp = (random.randint(0, 100))
+root.tester2.newTemp = (random.randint(0, 100))
+root.tester3 = Sensor()
+root.tester3.curTemp = (random.randint(0, 100))
+root.tester3.newTemp = (random.randint(0, 100))
+root.tester4 = Sensor()
+root.tester4.curTemp = (random.randint(0, 100))
+root.tester4.newTemp = (random.randint(0, 100))
+root.tester5 = Sensor()
+root.tester5.curTemp = (random.randint(0, 100))
+root.tester5.newTemp = (random.randint(0, 100))
 
 m5.instantiate()
 

@@ -13,7 +13,7 @@ SevenSegDis::SevenSegDis(SevenSegDisParams *params) :
     blocked(false)
 {
     DPRINTF(Seven, "display object created\n");
-
+    displayChar(params->toDisplay)
 }
 
 Port &
@@ -201,8 +201,8 @@ void SevenSegDis::startup()
 
 void SevenSegDis::processEvent()
 {
-    printf("What do you want to display?\n");
-    DPRINTF(Seven, "the input is: %s\n", displayChar);
+    DPRINTF(Seven, "What do you want to display?\n");
+    DPRINTF(Seven, "the input is: %s!\n", displayChar);
     
     if (displayChar.compare("0")==0)
          DPRINTF(Seven,"Displaying 1111110\n");
